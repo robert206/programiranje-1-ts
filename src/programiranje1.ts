@@ -147,3 +147,23 @@ console.log("Robot pride do stopnice z vrednostjo " + vrednostStopnice  );
 
 console.log("Drug najveji element = " + vaje.drugiNajvecjiElement([5, 1, 4, 8, 2, 3, 8]));
 console.log("Collatz naj zaporedje dolzine " + vaje.collatzNajZaporedje(1,5).length + " with values " + vaje.collatzNajZaporedje(1,10000) ); 
+
+console.log("Povrecja tekoca: " + vaje.tekocePovprecje([3, 5, 8, 0, 7, -3, 12, 0, -5, 5], 4));
+console.log("čokolada ostalo kosckov  = " + vaje.cokolada(10,["<3", "v5"]));
+
+
+console.log("Pari stevila" + vaje.pari([[76,526],[88,754],[12,34],[565,78],[900,12]]));
+
+console.log("Sode čebele lihe čebel = " + vaje.sodostCebel([["Miha",23],["Maja",24],["Luka",25],["Ana",26],["Bojan",27],["Petra",5]]));
+
+console.log("Sodost lihost "+ vaje.sodiLihi([1,2,3,4,5,6,7,8,9,10,11,12]));
+console.log("Sodost lihost "+ vaje.sodiLihi([2,3,1,4,6]));
+
+console.log("Alterniraj:" + vaje.alterniraj([3, 4, -1, 1, -5, -2, -1, 7, -8]));
+console.log("pekarna = " + vaje.pekarna(["A","A","B","A","B","O","A"]));
+console.log("Nogavice = " + vaje.nogavice([1, 1, 4, 1, 3, 1,5]));
+
+console.log("Črke v besedi = " +vaje.pokaziCrke("klobasA", ["a","b"]));
+console.log("Podobne besede = " + vaje.podobnaBeseda(["ana", "berta", "cilka", "dani", "ema", "fanci", "greta", "hilda"],"merjasec"));
+console.log("najraznolika beseda = " + vaje.najraznolikaBeseda(["ana", "bertazija", "cilka", "dani", "ema", "fanci", "greta", "hilda"]));
+console.log("Nqajpogostejša beseda = " + vaje.najpogostejsaBeseda("Klobase so najboljše klobase na svetu.Klobase so dobre in klobase so zdrave"));

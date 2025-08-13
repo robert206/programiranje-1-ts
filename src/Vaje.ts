@@ -996,5 +996,395 @@ export class Vaje {
 
     
 
+    //61.naloga
+    sosedi ( list : number[]) : number[] {
+        const sosedi : number[] = [];
+        if (list == null || list.length < 3) {
+            throw new Error("Seznam mora vsebovati vsaj 3 elemente.");
+        }
+        for (let i = 0; i < list.length; i++) {
+            const levi = list[(i - 1 + list.length) % list.length]; 
+            const desni = list[(i + 1) % list.length];    
+            sosedi.push(levi + desni);    
+        }
+        return sosedi;
+    }
+
+
+    //62.naloga
+    tekocePovprecje (list : number[], n : number) : number[] {
+        if (list == null || list.length < n ) {
+            throw new Error("Seznam mora vsebovati vsaj " + n + " elementov.");
+        }
+        const povprecja : number[] = [];
+        for (let i =0; i <= list.length -n ; i++) {
+            let vsota : number = 0;
+            for (let j = i; j < i + n; j++) {
+                vsota = vsota + list[j];
+            }
+            povprecja.push(vsota / n);
+        }
+        return povprecja;
+    }
+
+
+    //63.naloga
+    anban (imena: string[], izstevanka : string) {
+        if (imena == null || imena.length == 0) {
+            throw new Error ("Seznam je prazen ali prekratek.");
+        }
+        let index = 0;
+        let zmagovalci = imena;
+
+        const izstevaj : number = izstevanka.trim().split(/\s+/).length;
+        while (zmagovalci.length > 1) {
+            index = (index + izstevanka.length - 1) % zmagovalci.length;
+            zmagovalci.splice(index, 1);
+        }
+        return zmagovalci[0]; // there can be only one -Highlander
+    }
+
+
+    //64.naloga
+    najvecjiSkupniDelitelj(a: number, b: number): number {
+        while (b !== 0) {
+        [a, b] = [b, a % b];
+    }
+        return a;
+    }
+
+
+    //65.naloga
+    oskodovanci (otroci: number[], stOtrok : number) : boolean {
+        if (otroci == null || otroci.length == 0) {
+            throw new Error("Seznam otrok je prazen ali prekratek.");
+        }
+        let sprejetiBonboni = new Array(stOtrok).fill(false);
+        for (let otrok of otroci) {
+            if (otrok < 0) {
+                throw new Error("Otroci ne morjo biti negativni");
+            }
+            sprejetiBonboni[otrok] = true;
+        }
+        return sprejetiBonboni.every((dobilBonbon: boolean) => dobilBonbon);
+    }
+
+
+    //66.naloga
+    cokolada (n: number, odlomi : string[]) : number {
+        if (n <= 0 || odlomi == null || odlomi.length == 0) {
+            throw new Error("Neveljaven vhod");
+        }
+        let indexVrsticaStolpec : string = "";
+        let stVrsticStolpcev : number = 0;
+
+        let vsotaVrstic : number = 0;
+        let vsotaStolpcev : number = 0;
+
+        for (let i = 0; i < odlomi.length; i++) {
+            let trenutniElement = odlomi[i];
+            const [simbol, stevilka] = (trenutniElement.match(/([^\d]+)(\d+)/) || []).slice(1); //splitaj simbol recimo "<3", "^2" na znak in stevilko
+            //shrani
+            indexVrsticaStolpec = simbol;
+            stVrsticStolpcev = parseInt(stevilka, 10);// convertiraj v stevilko
+
+            if (isNaN(stVrsticStolpcev) || stVrsticStolpcev <= 0) {
+                throw new Error("Neveljaven odlomek: " + trenutniElement);
+            }
+
+            if (indexVrsticaStolpec === '<' || indexVrsticaStolpec === ">")  //takrat je stolpec
+            {
+                vsotaStolpcev = vsotaStolpcev + stVrsticStolpcev;
+            }
+            else {
+                vsotaVrstic = vsotaVrstic + stVrsticStolpcev;
+            }
+        }
+
+        const preostaliStolpci = n - vsotaStolpcev;
+        const preostaleVrstice = n - vsotaVrstic;
+        return (preostaleVrstice <= 0 || preostaliStolpci <= 0) ? 0 : preostaleVrstice * preostaliStolpci;  //vrni kolk kosckov je ostalo
+    }
+
+
+
+    //68.naloga
+    pari (seznam: [number,number][]) : [number,number][] {
+        if (seznam == null || seznam.length == 0) {
+            throw new Error("Seznam je prazen ali prekratek.");
+        }
+
+        let praviPari : [number,number] [] = [];
+        for (let par of seznam) {
+            if (par.length != 2) {
+                throw new Error("Neveljavni podatki");
+            }
+            let vsotaA = 0;
+            let vsotaB = 0;
+            vsotaA =  par[0].toString().split('').reduce((vsota, st) => vsota + Number(st), 0);
+            vsotaB = par[1].toString().split('').reduce((vsota, st) => vsota + Number(st), 0);
+            console.log("a = " + vsotaA + " b = " + vsotaB);
+            if ( vsotaA == vsotaB && par[0].toString().length != par[1].toString().length) { //če sta vsoti enaki vendar sta dolzini razlicni
+                praviPari.push(par);
+            }
+        }
+        return praviPari;
+    }
+
+    //70.naloga
+    sodostCebel (seznam : [string, number][]) : [[string,number][], [string,number][]] {
+        const sodeCebele : [string,number][] = [];
+        const liheCebele : [string,number][] = [];
+        for (let cebela of seznam) {
+            if (cebela[1] % 2 == 0) {
+                sodeCebele.push(cebela);
+            }
+            else 
+            {
+                liheCebele.push(cebela);
+            }
+        }
+        return [sodeCebele, liheCebele];
+    }
+
+
+    //71.naloga
+    sodiLihi (seznam : number[]) : boolean {
+        if (seznam == null || seznam.length == 0) {
+            throw new Error ("Seznam je prazen ali prekratek.");
+        }
+
+        for (let i = 1; i < seznam.length; i++) {
+            const prejsni = seznam[i -1] % 2 === 0
+            const trenutni = seznam[i] % 2 === 0;;
+            if (prejsni === trenutni) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    //72.naloga
+    najprejLiha ( seznam : number[]) : number[] {
+        if (seznam == null || seznam.length == 0) {
+            throw new Error ("Seznam je prazen ali prekratek.");
+        }
+        let liha : number[] = [];
+        let soda : number[] = [];
+        for (let el of seznam) {
+            if (el % 2 == 0) {
+                soda.push(el);
+            }
+            else {
+                liha.push(el);
+            }
+        }
+        return [...liha,...soda]; 
+    }
+
+
+    //73.naloga
+    alterniraj (seznam : number[]) : number[] {
+        if (seznam == null || seznam.length == 0) {
+            throw new Error ("Seznam je prazen ali prekratek."); 
+        }
+        
+        let novi : number[] = [];
+        novi.push(seznam[0]); //dodaj prvi element
+        for (let i =1; i < seznam.length; i++) {
+            if (seznam[i] > 0 && seznam[i-1] < 0) {
+                novi.push(seznam[i]);
+            }
+            else if (seznam[i] < 0 && seznam[i-1] > 0) {
+                novi.push(seznam[i]);
+            }
+            else {
+                console.log("Preskocim element " + seznam[i] + " ker ne ustreza pogoju");
+            }
+        }
+        return novi;
+    }
+
+    
+    //75.naloga
+    pekarna(seznam: string[]): number {
+        const vzorec = ["A", "B", "O"];
+        let vzorecIndeks = 0;
+        let ujemanje = 0;
+
+        for (const el of seznam) {
+            if (el === vzorec[vzorecIndeks]) {
+                ujemanje++;
+                vzorecIndeks = (vzorecIndeks + 1) % vzorec.length;
+            }
+        }
+        return ujemanje;
+    }
+
+
+    //76.naloga
+    nogavice (seznam : number[]) : number[] {
+        let brezPara : number[] = [];
+        if (seznam == null || seznam.length == 0) {
+            throw new Error("Seznam je prazen ali prekratek.");
+        }
+        for (let i =0; i < seznam.length; i++) {
+            const trenutnaNogavica = seznam[i];
+            const indeks = seznam.indexOf(trenutnaNogavica);
+
+            console.log("indeks = " + indeks);
+            if (indeks != -1 && indeks != i) {
+                seznam.splice(indeks, 1); //odstrani prvi najden štumf
+            }
+            console.log("Seznam po odstranitvi: " + seznam);
+        }
+        return seznam;
+    }
+
+
+    //78.naloga
+    pokaziCrke (beseda : string, crke : string[]) : string {
+        if (beseda == null || beseda.length == 0) {
+            throw new Error("Beseda je prazna ali neveljavna.");
+        }
+        if (crke == null || crke.length == 0) {
+            throw new Error("Seznam črk je prazen ali neveljaven.");
+        }
+
+        let rezultat : string = "";
+        for (let i = 0; i < beseda.length; i++) {
+            
+            if (crke.join('').toUpperCase().includes(beseda[i].toUpperCase())) {
+                rezultat = rezultat + beseda[i].toUpperCase();;
+            } else {
+                rezultat += ".";
+            }
+        }
+        return rezultat;
+    }
+
+
+    //79.naloga
+    podobnaBeseda (besede : string[] , beseda: string) : string {
+        if (besede == null || besede.length == 0) {
+            throw new Error("Seznam besed je prazen ali neveljaven.");
+        }
+        if (beseda == null || beseda.length == 0) {
+            throw new Error("Beseda je prazna ali neveljavna.");
+        }
+
+        let najdaljsa : string = "";
+        let bestMatchLength : number = 0;
+
+        for (let b of besede) {
+            let unikatneCrke = new Set(b.toLowerCase());
+            let stevec : number = 0;
+            for (let crka of unikatneCrke) {
+                if (unikatneCrke.has(crka)) {
+                    stevec++;
+                }
+            }
+
+            if (stevec > bestMatchLength) {
+                najdaljsa = b;
+                bestMatchLength = stevec;
+            }
+        }
+        return najdaljsa;
+    }
+
+
+    //80.naloga
+    najraznolikaBeseda (besede : string[]) : string {
+        if (besede == null || besede.length ==0) {
+            throw new Error("Seznam besed je prazen ali neveljaven.");
+        }
+        let najraznolika : string = "";
+        besede.forEach((beseda) => {
+            const unikatneCrke = new Set(beseda.toLowerCase());
+            if (unikatneCrke.size >= najraznolika.length) {
+                najraznolika = beseda;
+            }
+        });
+        return najraznolika;
+    }
+
+
+    //81.naloga
+    najpogostejsaBeseda ( niz : string ) : string {
+        if (niz == null || niz.length == 0) {
+            throw new Error("Seznam besed je prazen ali neveljaven.");
+        }
+
+        const besede = niz.toLowerCase().replace(/[^\w\s]/g, "").split(/\s+/);   
+            
+        const steviloPojavitev : {[key: string]: number} = {};
+
+        let najpogostejsa : string = "";
+        let maxPojavitev : number = 0;
+        for (let beseda of besede) {
+            steviloPojavitev[beseda] = (steviloPojavitev[beseda] || 0) + 1; 
+
+            if (steviloPojavitev[beseda] > maxPojavitev) {
+                maxPojavitev = steviloPojavitev[beseda];
+                najpogostejsa = beseda;
+            }
+        }
+        return najpogostejsa;
+    }
+
+    //81.naloga 
+    najpogostejsaCrka (niz : string) : string {
+        if (niz == null || niz.length == 0) {
+            throw new Error("Niz je prazen ali neveljaven.");
+        }
+        const nizNormaliziran = niz.toLowerCase().replace(/[^\w\s]/g, "").split("");  ;
+        let steviloPojavitev : {[key:string]: number} = {};
+        let najpogostejsa : string = "";
+        let najpogostejsaDolzina : number = 0;
+        for (let crka of nizNormaliziran) {
+            steviloPojavitev[crka] = (steviloPojavitev[crka] || 0) + 1; //če ne obstaja, nastavi na 0 in potem povečaj
+        }
+
+        for (let crka in steviloPojavitev) {
+            if (steviloPojavitev[crka] > najpogostejsaDolzina) {
+                najpogostejsa = crka;
+                najpogostejsaDolzina = steviloPojavitev[crka];
+            }
+        }
+        return najpogostejsa
+    }
+
+
+    //82.naloga 
+    samoEnkrat (niz : string) : boolean {
+        const nizNormaliziran = niz.toLowerCase().replace(/[^\w\s]/g, "").split(""); //normaliziram niz
+        const steviloPojavitev : {[key: string]: number} = {};
+        for (let crka of nizNormaliziran) {
+            steviloPojavitev[crka] = (steviloPojavitev[crka] || 0) + 1; //če ne obstaja, nastavi na 0 in potem povečaj
+        }
+
+        for ( let crka in steviloPojavitev) {
+            if (steviloPojavitev[crka] > 1) {
+                return false; 
+            }
+        }
+        return true;
+    }
+
+
+
+    
+
+
+
+    
+
+
+
+
+
+
 
 }
