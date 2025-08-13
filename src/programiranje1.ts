@@ -2,7 +2,11 @@
  import { Oseba } from './Oseba';
 
 
-const vaje = new Vaje();
+ const vaje = new Vaje();
+
+ type Sociogram = Record<string, Set<string> >;
+
+
  console.log(vaje.fibonacci(44));
  console.log ("Prvih 100 praštevil= " + vaje.primeNumbers(100));
  console.log(vaje.pitagoras(3,4));
@@ -87,6 +91,59 @@ console.log("Zamenjana teze :" + vaje.zamenjajTeze(imena,teze));
 
 console.log("Je zenska " + vaje.jeZenska("0801980506667"));
 console.log("preveri emso = " + vaje.preveriEmso("0907985505456"));
+const starost = vaje.starostEmso('0801980500317')
+console.log("Za emso starost je =" + starost.leto + " let " + starost.meseci + " mesecev " + starost.dnevi + " dni.");
+
+console.log("Nepadajoč ? = " + vaje.nepadajoc([2,3,4,5]));
+
+console.log("Mesta crke  "+ vaje.mestaCrke("KLOBaSA", "A"));
+
+console.log("Seznam mrange = " + vaje.mrange(2,2,10));
+console.log("Sumpljive besede = " + vaje.sumljiveBesede("Sumljiva beseda drek uta ruta toto"));
+console.log("Best kockar na svetu = " + vaje.kockarji([1,2,4,6,4,4,4,4,2,3,1,6], 4));
+
+console.log("Ujemajoče besede : " + vaje.krizanka("m.r.",["mark","mast","miro","mara"]));
+
+console.log("tekoce povprecje " + vaje.tekocePovprecje([2,2,2,2,4]))
+
+const inventar = {
+    'sir': 8,
+    'kruh': 15,
+    'makovka': 10,
+    'pasja radost': 2,
+    'pašteta': 10,
+    'mortadela': 4,
+    'klobasa': 7
+};
+
+console.log("Zaloga sira = " +vaje.zaloga(inventar, "sir"));
+
+const zaloga = vaje.prodaj(inventar,"sir",2);
+console.log(zaloga);
+
+const narocilo = {
+    'pašteta': 11,
+    'klobasa': 9,
+    'pivo': 1
+};
+console.log(vaje.primankljaj(inventar, narocilo));
 
 
+const sociogram: Sociogram = {
+    "Ana": new Set<string>(["Berta"]),
+    "Berta": new Set<string>(["Ana", "Cilka", "Ema"]),
+    "Cilka": new Set<string>(),
+    "Dani": new Set<string>(["Berta"]),
+    "Ema": new Set<string>(["Ana", "Berta"]),
+    "Fanči": new Set<string>(["Cilka", "Dani"])
+};
 
+console.log(Array.from(vaje.prijatelji("Berta", sociogram)) ); 
+console.log("Najbolj priljubjena je = "+ vaje.najboljPriljubljeni(sociogram));
+
+const stopnice : number[] = [10, 20, 25, 45, 50, 71, 98, 110]; //index vrne
+const vrednostStopnice : number = stopnice[vaje.kakoVisoko(stopnice)];
+console.log("Robot pride do stopnice z vrednostjo " + vrednostStopnice  );
+
+console.log("Drug najveji element = " + vaje.drugiNajvecjiElement([5, 1, 4, 8, 2, 3, 8]));
+console.log("Collatz naj zaporedje dolzine " + vaje.collatzNajZaporedje(1,5).length + " with values " + vaje.collatzNajZaporedje(1,10000) ); 

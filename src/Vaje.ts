@@ -1,6 +1,13 @@
 
 type Vector = number[];
 
+type Tecaji = Record <string, Set<string>>;
+
+type Inventar = Record <string, number>;
+
+type Sociogram = Record<string, Set<string> >; 
+
+
 export class Vaje {
 
     // Find prime numbers up to n
@@ -667,21 +674,327 @@ export class Vaje {
     }
 
     //52.naloga
-    starostEmso ( emso:string) : boolean {
-        if (emso.length < 13) {
-            throw new Error("invqalid emso");
+    starostEmso ( emso : string) : { leto : number, meseci : number, dnevi :number } {
+        if (!this.preveriEmso(emso)) {
+            throw new Error("napacen emso stari!");
         }
+        const dan : number = parseInt (emso.substring(0,2));
+        const mesec : number = parseInt (emso.substring(2,4));
+        const delnoLeto : number = parseInt (emso.substring(4,7));
+
+        //polno leto če je npr 980 potem je rojen v 1980 ,.če je 001 potem je 2001 ,manjše od 100 = 2xxx+ ,večje od 100= 19xx
+        const polnoLeto = delnoLeto >= 100 ? 1000 + delnoLeto : 2000 + delnoLeto; 
+        console.log ("leto = "+ polnoLeto);
+
+        const rojDan = new Date (polnoLeto,mesec-1,dan); //mesec indeksi od 0 dalje
+
+        const danes = new Date();
+        let leto : number = danes.getFullYear() - rojDan.getFullYear();
+        let meseci : number = danes.getMonth() - rojDan.getMonth();
+        let dnevi : number = danes.getDay() - rojDan.getDay();
+
+        //če so negativni dnevi
+        if (dnevi < 0) {
+            meseci--; 
+            const prejsniMesec  =  new Date(danes.getFullYear(), danes.getMonth(), 0);
+            dnevi = dnevi + prejsniMesec.getDate();
+        }
+
+        if (meseci < 0) {
+            --leto;
+            meseci = meseci + 12;
+
+        }
+        return {leto,meseci,dnevi};
+    }
+
+    //55.naloga
+    nepadajoc (seznam : number[] ) : boolean {
+        if (seznam.length == 0) {
+            throw new Error("Seznam je prekratek.");
+        }
+        for (let i = 1; i < seznam.length; i++) {
+            if (seznam[i] < seznam[i-1]) {
+                return false;
+            }
+        }
+        return true;  
+    }
+
+    //56.naloga 
+    mestaCrke (beseda : string , crka : string) : number [] {
+        if (beseda.length === 0 ) {
+            throw new Error("Prekratka beseda");
+        }
+        let pojavitve : number[] = [];
+        for (let i =0; i < beseda.length; i++) {
+            if (beseda.toUpperCase().charAt(i) === crka.toUpperCase() ) {
+                pojavitve.push(i);
+            }
+        }
+        return pojavitve;
+    }
+
+    
+
+    //57.naloga
+    mrange(zacStevilo : number, faktor : number, dolzina : number ) : number[] {
+        if (dolzina < 1 || faktor < 1 || zacStevilo < 1) {
+            throw new Error("Nepravilni parametri.");
+        }
+
+        let seznam : number [] = [zacStevilo];
+        let stevec = 0;
+        while (stevec < dolzina) {
+            let trenutniElement = seznam[stevec] * faktor;
+            stevec++
+            seznam.push(trenutniElement);
+        }
+        return seznam;
+    }
+
+    
+
+    //58.naloga 
+    sumljiveBesede (tekst : string ) : string[] {
+        let besede : string [] = tekst.split(" ");
+        let sumljive : string [] = [];
+        for (let beseda of besede) {
+            if (/[au]/i.test(beseda)) {
+                sumljive.push(beseda);
+            }
+        }
+        return sumljive;
+    }
+
+
+    //59.naloga
+    kockarji (seznam : number [], stKockarjev : number) : number {
+        let sestice : number [] = new Array(stKockarjev).fill(0);
+        for (let i = 0; i < seznam.length; i++) {
+            let trenutniIgralec : number =  i % stKockarjev;
+            if (seznam[i] === 6) {
+                sestice[trenutniIgralec]++;
+            }
+        }
+        //vrni igralca z max sestic
+        let maxSestic : number = -1
+        let zmagovalec : number = 1
+        for (let i =0; i < sestice.length; i++) {
+            if (sestice[i] > maxSestic) {
+                maxSestic = sestice[i];
+                zmagovalec = i + 1;
+            }      
+        }
+        return zmagovalec;
+    }
+
+
+    //60.naloga 
+    krizanka ( vzorec : string, besede : string[] ) {
+        if (besede.length === 0 ) { 
+            throw new Error("Prekratek seznam.");
+        }
+        let ujemajočeBesede : string [] = [];
+        for (let beseda of besede) {
+            if (this.seUjemaVzorec(beseda,vzorec)) {
+                ujemajočeBesede.push(beseda);
+            }
+        }
+        return ujemajočeBesede;       
+    }
+
+
+    //62.naloga
+    tekocePovprecje (seznam : number[]) : number[] {
+        if (seznam === null || seznam.length === 0 ) {
+            throw new Error("Invalidna lista");
+        }
+
+        let seznamPovprecij : number[] = [];
+        let trenutnoPovprecje : number = 0;
+
+        for ( let i = 0; i < seznam.length -3; i++) {
+            let vsota : number = 0;
+            for ( let k = i ; k < (i+4); k++) {
+                vsota = vsota + seznam[k];
+            }
+            seznamPovprecij.push(vsota / 4);
+        }
+        return seznamPovprecij;
+    }
+
+
+    //63.naloga
+    izstevanka(osebe: string[]): string {
+        const stBesed = 13; //an ban pet podgan glupost
         
+        let indeks = 0;
+        while (osebe.length > 1) {
+            indeks = (indeks + stBesed - 1) % osebe.length;
+            osebe.splice(indeks, 1); // odstranimo izločeno osebo
+        }
+        return osebe[0]; // zadnja preostala oseba je zmagovalec
+    }
+
+
+    //98.naloga
+    opravil (ime: string, tecaj: string, tecaji: Tecaji) : Tecaji {
+        if (!tecaji[ime]) {
+            tecaji[ime] = new Set<string>();
+        }
+        tecaji[ime].add(tecaj);
+        return tecaji;
+    }
+
+
+    najvecUcen (tecaji : Tecaji) : string | undefined {
+     let najIme : string = "";
+     let najCount : number = 0;
+
+     for (const ime in tecaji) {
+        if (tecaji[ime].size > najCount) {
+            najIme = ime;
+            najCount = tecaji[ime].size;
+        }
+     }
+     return najIme;
+    }
+
+
+    vsiTecaji (tecajniki : Tecaji) : Set<string> {
+        let vsi = new Set<string>();
+        for (let tecajnik in tecajniki) {
+            let tecaji = tecajniki[tecajnik];
+            for (let tecaj in tecaji) {
+                vsi.add (tecaj);
+            }
+        }
+        return vsi;
+    }
+
+
+    neopravljeniTecaji ( ime : string ,tecaji : Tecaji) : Set<string> {
+        const vsiTecaji = this.vsiTecaji(tecaji);
+        let tecajiIskanega = tecaji[ime] ?? new Set<string>();
+        let neopravljeni = new Set<string>();
+        
+        for (let tecaj of vsiTecaji) {
+            if (!tecajiIskanega.has(tecaj)) {
+                neopravljeni.add(tecaj)
+            }
+        }
+        return neopravljeni;
+    }   
+
+    //101.naloga
+    zaloga(inventar : Inventar, izdelek : string ) : number {
+        return inventar[izdelek] || 0
+    }
+
+
+    prodaj (inventar : Inventar, izdelek : string, kolicina : number ) : Inventar {
+        if (izdelek == null || kolicina < 0) {
+            throw new Error("invalid inventory ali kolicina < 0");
+        }
+        if (inventar[izdelek]!= undefined) {
+            inventar[izdelek] = inventar[izdelek] - kolicina;
+        }
+        return inventar;
+    }
+
+
+    primankljaj (inventar : Inventar, narocilo : Inventar) : Inventar {
+     let rezultat : Inventar = {};
+
+     for (const izdelek in narocilo) {
+        const zalogaKolicina = inventar[izdelek] || 0;
+        const narocenaKolicina = narocilo[izdelek] || 0;
+        if (narocenaKolicina > zalogaKolicina) {
+            rezultat[izdelek] = narocenaKolicina - zalogaKolicina;
+        }
+     }
+     return rezultat;
+    }
+
+    //106 .naloga sociogram
+    prijatelji (kdo : string, sociogram : Sociogram) : Set<string> {
+        const prijatelji = new Set<string>();
+
+        for (const prijatelj in sociogram) {
+            if (sociogram[prijatelj].has(kdo)) {
+                prijatelji.add(prijatelj);
+            }
+        }
+        return prijatelji;
+    }
+
+
+    najboljPriljubljeni (sociogram: Sociogram) :string {
+        let maxIme :string = "";
+        let maxCount :number = 0;
+        for (const oseba in sociogram) {
+            let trenutniStevec : number = this.prijatelji(oseba,sociogram).size;
+            if (trenutniStevec > maxCount) {
+                maxCount = trenutniStevec;
+                maxIme = oseba;
+            }
+        }
+        return maxIme;
+    }
+
+
+    //167.naloga
+    kakoVisoko (stopnice : number[]) : number {
+        if (stopnice.length <= 0 ) {
+            throw new Error("Neveljaven seznam stopnic.");
+        }
+        let rezultat : number = 0;
+        if (stopnice[0] > 20) {
+            return 0;
+        }
+
+        for (let i = 1; i < stopnice.length; i++) {
+            let visinaStopnice = stopnice[i] - stopnice[i-1];
+            if (visinaStopnice <= 20) {
+                ++rezultat;
+            }
+            else break;
+        }
+        return rezultat; // index stopnice
+    }
+
+
+    //168.naloga
+    drugiNajvecjiElement ( seznam : number[]) : number {
+        const brezDuplikatov = new Set(seznam);
+        //convertaj nazaj v array
+        const seznamBrezDuplikatov = [...brezDuplikatov];
+        //sortiraj padajoce
+        const sortiran = seznamBrezDuplikatov.sort((a,b) => b - a);
+        return sortiran[1];
+    }
+
+
+    //169.naloga 
+    collatzNajZaporedje ( a: number, b: number) {
+        let zaporedje: number[] = [];
+        let dolzinaMax : number = 0;
+
+        for ( let i = a;i <= b;i++) {
+            let tmpZaporedje : number[] = this.collatz(i);
+            //najdi max 
+            if (tmpZaporedje.length > dolzinaMax) {
+                dolzinaMax = tmpZaporedje.length;
+                zaporedje = tmpZaporedje;
+            }
+        }
+        return zaporedje;
     }
 
 
 
     
-
-
-
-
-
 
 
 }
